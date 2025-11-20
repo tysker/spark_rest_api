@@ -1,0 +1,210 @@
+{
+  "info": {
+    "name": "Spark REST API",
+    "_postman_id": "c7a4f438-1234-4f9a-a1f6-99d8aa11abcd",
+    "description": "Auto-generated Postman Collection for Spark REST API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"john\",\n    \"password\": \"test123\",\n    \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"john\",\n    \"password\": \"test123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "pm.collectionVariables.set(\"token\", json.token);",
+                  "pm.environment.set(\"token\", json.token);",
+                  "console.log(\"Token stored:\", json.token);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Persons",
+      "item": [
+        {
+          "name": "Create Person",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('token') });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bob\",\n  \"age\": 30\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/persons/",
+              "host": ["{{baseUrl}}"],
+              "path": ["persons", ""]
+            }
+          }
+        },
+        {
+          "name": "Get All Persons",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('token') });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/persons/",
+              "host": ["{{baseUrl}}"],
+              "path": ["persons", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Person by ID",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('token') });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/persons/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["persons", "1"]
+            }
+          }
+        },
+        {
+          "name": "Edit Person",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('token') });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Bob\",\n  \"age\": 35\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/persons/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["persons", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Person",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('token') });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/persons/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["persons", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
